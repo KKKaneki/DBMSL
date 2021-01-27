@@ -1,0 +1,430 @@
+db.post.insert({"title":"Cryptography","date": Date.now().toString(),"author":"Abraham","tags":["Cyber Security","Hashing","Encryption"],"comments":[{"text":"Comment 1","author": "Anne"},{"text":"Comment 2","author": "John"},{"text":"Comment 3","author": "Charles"}]});
+
+
+
+db.post.insert({"title":"RSA","date": Date.now().toString(),"author":"River","tags":["Hashing","Encryption","Security"],"comments":[{"text":"This is a great algorithm","author": "Shellet"},{"text":"Little bit hard to understand","author": "Dilon"},{"text":"This helped me a lot.","author": "Jay"}]});
+
+db.post.insert({"title":"Cross-site-scripting","date": Date.now().toString(),"author":"Pradyumna","tags":["Security"],"comments":[{"text":"This helped a lot.","author": "Shellet"},{"text":"Easy method.","author": "Dilon"}]});
+
+
+db.post.insert({"title":"SQL Injection","date": Date.now().toString(),"author":"Pradyumna","tags":["SQL","Database","PHP"],"comments":[{"text":"This helped a lot.","author": "Luke"},{"text":"Easy method.","author": "Mitch"}]});
+
+
+db.post.find({"tags":{$size : 3}}).pretty();
+
+db.post.find({"tags":{$all : ["Encryption"]}}).pretty();
+
+db.post.find({"tags":{$nin:["Hashing"]}}).pretty();
+
+db.post.find({comments : {$elemMatch: {"author":"Dilon"}}}).pretty();
+
+db.post.find({comments : {$elemMatch: { $lte : {$size : 3}}}}).pretty();
+
+db.post.find({$where : "this.comments.length<3"}).pretty();
+db.post.find({comments:{$elemMatch:{"text":"This helped a lot."}}}).pretty();
+
+
+
+
+
+
+
+> db.post.insert({"title":"Cryptography","date": Date.now().toString(),"author":"Abraham","tags":["Cyber Security","Hashing","Encryption"],"comments":[{"text":"Comment 1","author": "Anne"},{"text":"Comment 2","author": "John"},{"text":"Comment 3","author": "Charles"}]});
+WriteResult({ "nInserted" : 1 })
+> db.post.insert({"title":"RSA","date": Date.now().toString(),"author":"River","tags":["Hashing","Encryption","Security"],"comments":[{"text":"This is a great algorithm","author": "Shellet"},{"text":"Little bit hard to understand","author": "Dilon"},{"text":"This helped me a lot.","author": "Jay"}]});
+WriteResult({ "nInserted" : 1 })
+> db.post.insert({"title":"Cross-site-scripting","date": Date.now().toString(),"author":"Pradyumna","tags":["Security"],"comments":[{"text":"This helped a lot.","author": "Shellet"},{"text":"Easy method.","author": "Dilon"}]});
+WriteResult({ "nInserted" : 1 })
+> db.post.insert({"title":"SQL Injection","date": Date.now().toString(),"author":"Pradyumna","tags":["SQL","Database","PHP"],"comments":[{"text":"This helped a lot.","author": "Luke"},{"text":"Easy method.","author": "Mitch"}]});
+WriteResult({ "nInserted" : 1 })
+> db.post.find().pretty();
+{
+        "_id" : ObjectId("5fa58e21c594888adc1168eb"),
+        "title" : "Cryptography",
+        "date" : "1604685345054",
+        "author" : "Abraham",
+        "tags" : [
+                "Cyber Security",
+                "Hashing",
+                "Encryption"
+        ],
+        "comments" : [
+                {
+                        "text" : "Comment 1",
+                        "author" : "Anne"
+                },
+                {
+                        "text" : "Comment 2",
+                        "author" : "John"
+                },
+                {
+                        "text" : "Comment 3",
+                        "author" : "Charles"
+                }
+        ]
+}
+{
+        "_id" : ObjectId("5fa58e28c594888adc1168ec"),
+        "title" : "RSA",
+        "date" : "1604685352814",
+        "author" : "River",
+        "tags" : [
+                "Hashing",
+                "Encryption",
+                "Security"
+        ],
+        "comments" : [
+                {
+                        "text" : "This is a great algorithm",
+                        "author" : "Shellet"
+                },
+                {
+                        "text" : "Little bit hard to understand",
+                        "author" : "Dilon"
+                },
+                {
+                        "text" : "This helped me a lot.",
+                        "author" : "Jay"
+                }
+        ]
+}
+{
+        "_id" : ObjectId("5fa58e37c594888adc1168ed"),
+        "title" : "Cross-site-scripting",
+        "date" : "1604685367585",
+        "author" : "Pradyumna",
+        "tags" : [
+                "Security"
+        ],
+        "comments" : [
+                {
+                        "text" : "This helped a lot.",
+                        "author" : "Shellet"
+                },
+                {
+                        "text" : "Easy method.",
+                        "author" : "Dilon"
+                }
+        ]
+}
+{
+        "_id" : ObjectId("5fa58e3ec594888adc1168ee"),
+        "title" : "SQL Injection",
+        "date" : "1604685374558",
+        "author" : "Pradyumna",
+        "tags" : [
+                "SQL",
+                "Database",
+                "PHP"
+        ],
+        "comments" : [
+                {
+                        "text" : "This helped a lot.",
+                        "author" : "Luke"
+                },
+                {
+                        "text" : "Easy method.",
+                        "author" : "Mitch"
+                }
+        ]
+}
+
+> db.post.find({"tags":{$size : 3}}).pretty();
+{
+        "_id" : ObjectId("5fa58e21c594888adc1168eb"),
+        "title" : "Cryptography",
+        "date" : "1604685345054",
+        "author" : "Abraham",
+        "tags" : [
+                "Cyber Security",
+                "Hashing",
+                "Encryption"
+        ],
+        "comments" : [
+                {
+                        "text" : "Comment 1",
+                        "author" : "Anne"
+                },
+                {
+                        "text" : "Comment 2",
+                        "author" : "John"
+                },
+                {
+                        "text" : "Comment 3",
+                        "author" : "Charles"
+                }
+        ]
+}
+{
+        "_id" : ObjectId("5fa58e28c594888adc1168ec"),
+        "title" : "RSA",
+        "date" : "1604685352814",
+        "author" : "River",
+        "tags" : [
+                "Hashing",
+                "Encryption",
+                "Security"
+        ],
+        "comments" : [
+                {
+                        "text" : "This is a great algorithm",
+                        "author" : "Shellet"
+                },
+                {
+                        "text" : "Little bit hard to understand",
+                        "author" : "Dilon"
+                },
+                {
+                        "text" : "This helped me a lot.",
+                        "author" : "Jay"
+                }
+        ]
+}
+{
+        "_id" : ObjectId("5fa58e3ec594888adc1168ee"),
+        "title" : "SQL Injection",
+        "date" : "1604685374558",
+        "author" : "Pradyumna",
+        "tags" : [
+                "SQL",
+                "Database",
+                "PHP"
+        ],
+        "comments" : [
+                {
+                        "text" : "This helped a lot.",
+                        "author" : "Luke"
+                },
+                {
+                        "text" : "Easy method.",
+                        "author" : "Mitch"
+                }
+        ]
+}
+
+> db.post.find({"tags":{$all : ["Encryption"]}}).pretty();
+{
+        "_id" : ObjectId("5fa58e21c594888adc1168eb"),
+        "title" : "Cryptography",
+        "date" : "1604685345054",
+        "author" : "Abraham",
+        "tags" : [
+                "Cyber Security",
+                "Hashing",
+                "Encryption"
+        ],
+        "comments" : [
+                {
+                        "text" : "Comment 1",
+                        "author" : "Anne"
+                },
+                {
+                        "text" : "Comment 2",
+                        "author" : "John"
+                },
+                {
+                        "text" : "Comment 3",
+                        "author" : "Charles"
+                }
+        ]
+}
+{
+        "_id" : ObjectId("5fa58e28c594888adc1168ec"),
+        "title" : "RSA",
+        "date" : "1604685352814",
+        "author" : "River",
+        "tags" : [
+                "Hashing",
+                "Encryption",
+                "Security"
+        ],
+        "comments" : [
+                {
+                        "text" : "This is a great algorithm",
+                        "author" : "Shellet"
+                },
+                {
+                        "text" : "Little bit hard to understand",
+                        "author" : "Dilon"
+                },
+                {
+                        "text" : "This helped me a lot.",
+                        "author" : "Jay"
+                }
+        ]
+}
+>  
+> db.post.find({"tags":{$nin:["Hashing"]}}).pretty();
+{
+        "_id" : ObjectId("5fa58e37c594888adc1168ed"),
+        "title" : "Cross-site-scripting",
+        "date" : "1604685367585",
+        "author" : "Pradyumna",
+        "tags" : [
+                "Security"
+        ],
+        "comments" : [
+                {
+                        "text" : "This helped a lot.",
+                        "author" : "Shellet"
+                },
+                {
+                        "text" : "Easy method.",
+                        "author" : "Dilon"
+                }
+        ]
+}
+{
+        "_id" : ObjectId("5fa58e3ec594888adc1168ee"),
+        "title" : "SQL Injection",
+        "date" : "1604685374558",
+        "author" : "Pradyumna",
+        "tags" : [
+                "SQL",
+                "Database",
+                "PHP"
+        ],
+        "comments" : [
+                {
+                        "text" : "This helped a lot.",
+                        "author" : "Luke"
+                },
+                {
+                        "text" : "Easy method.",
+                        "author" : "Mitch"
+                }
+        ]
+}
+> 
+> db.post.find({comments : {$elemMatch: {"author":"Dilon"}}}).pretty();
+{
+        "_id" : ObjectId("5fa58e28c594888adc1168ec"),
+        "title" : "RSA",
+        "date" : "1604685352814",
+        "author" : "River",
+        "tags" : [
+                "Hashing",
+                "Encryption",
+                "Security"
+        ],
+        "comments" : [
+                {
+                        "text" : "This is a great algorithm",
+                        "author" : "Shellet"
+                },
+                {
+                        "text" : "Little bit hard to understand",
+                        "author" : "Dilon"
+                },
+                {
+                        "text" : "This helped me a lot.",
+                        "author" : "Jay"
+                }
+        ]
+}
+{
+        "_id" : ObjectId("5fa58e37c594888adc1168ed"),
+        "title" : "Cross-site-scripting",
+        "date" : "1604685367585",
+        "author" : "Pradyumna",
+        "tags" : [
+                "Security"
+        ],
+        "comments" : [
+                {
+                        "text" : "This helped a lot.",
+                        "author" : "Shellet"
+                },
+                {
+                        "text" : "Easy method.",
+                        "author" : "Dilon"
+                }
+        ]
+}
+>                        
+
+> db.post.find({$where : "this.comments.length<3"}).pretty();
+{
+        "_id" : ObjectId("5fa58e37c594888adc1168ed"),
+        "title" : "Cross-site-scripting",
+        "date" : "1604685367585",
+        "author" : "Pradyumna",
+        "tags" : [
+                "Security"
+        ],
+        "comments" : [
+                {
+                        "text" : "This helped a lot.",
+                        "author" : "Shellet"
+                },
+                {
+                        "text" : "Easy method.",
+                        "author" : "Dilon"
+                }
+        ]
+}
+{
+        "_id" : ObjectId("5fa58e3ec594888adc1168ee"),
+        "title" : "SQL Injection",
+        "date" : "1604685374558",
+        "author" : "Pradyumna",
+        "tags" : [
+                "SQL",
+                "Database",
+                "PHP"
+        ],
+        "comments" : [
+                {
+                        "text" : "This helped a lot.",
+                        "author" : "Luke"
+                },
+                {
+                        "text" : "Easy method.",
+                        "author" : "Mitch"
+                }
+        ]
+}
+>
+
+> db.post.find({comments:{$elemMatch:{"text":"This helped a lot."}}}).pretty();
+{
+        "_id" : ObjectId("5fa58e37c594888adc1168ed"),
+        "title" : "Cross-site-scripting",
+        "date" : "1604685367585",
+        "author" : "Pradyumna",
+        "tags" : [
+                "Security"
+        ],
+        "comments" : [
+                {
+                        "text" : "This helped a lot.",
+                        "author" : "Shellet"
+                },
+                {
+                        "text" : "Easy method.",
+                        "author" : "Dilon"
+                }
+        ]
+}
+{
+        "_id" : ObjectId("5fa58e3ec594888adc1168ee"),
+        "title" : "SQL Injection",
+        "date" : "1604685374558",
+        "author" : "Pradyumna",
+        "tags" : [
+                "SQL",
+                "Database",
+                "PHP"
+        ],
+        "comments" : [
+                {
+                        "text" : "This helped a lot.",
+                        "author" : "Luke"
+                },
+                {
+                        "text" : "Easy method.",
+                        "author" : "Mitch"
+                }
+        ]
+}
+> 

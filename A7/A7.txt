@@ -1,0 +1,371 @@
+mysql> CREATE TABLE customer( 
+
+    -> cust_id INT PRIMARY KEY NOT NULL UNIQUE, 
+
+    -> name VARCHAR(100), 
+
+    -> total_purchare INT); 
+
+Query OK, 0 rows affected (0.08 sec) 
+
+  
+
+mysql> CREATE TABLE category( 
+
+    -> cust_id INT, 
+
+    -> cust_name VARCHAR(100), 
+
+    -> class VARCHAR(100)); 
+
+Query OK, 0 rows affected (0.06 sec) 
+
+  
+
+mysql> DESCRIBE category; 
+
++-----------+--------------+------+-----+---------+-------+ 
+
+| Field     | Type         | Null | Key | Default | Extra | 
+
++-----------+--------------+------+-----+---------+-------+ 
+
+| cust_id   | int          | YES  |     | NULL    |       | 
+
+| cust_name | varchar(100) | YES  |     | NULL    |       | 
+
+| class     | varchar(100) | YES  |     | NULL    |       | 
+
++-----------+--------------+------+-----+---------+-------+ 
+
+3 rows in set (0.01 sec) 
+
+ 
+
+ 
+
+mysql> SELECT * FROM customer; 
+
++---------+--------+----------------+ 
+
+| cust_id | name   | total_purchase | 
+
++---------+--------+----------------+ 
+
+|       1 | Will   |           2000 | 
+
+|       2 | John   |           5000 | 
+
+|       3 | Smith  |           4999 | 
+
+|       4 | James  |           9989 | 
+
+|       5 | Harry  |          15000 | 
+
+|       6 | Donald |          10000 | 
+
++---------+--------+----------------+ 
+
+6 rows in set (0.00 sec) 
+
+  
+
+mysql> SELECT * FROM category; 
+
+Empty set (0.00 sec) 
+
+  
+mysql> DELIMITER // 
+
+mysql> CREATE PROCEDURE proc_Grade() 
+
+    -> BEGIN 
+
+    -> DECLARE cust_id INT; 
+
+    -> DECLARE cust_name VARCHAR(100); 
+
+    -> DECLARE total_purchase INT; 
+
+    -> DECLARE loop_end INT DEFAULT 0; 
+
+    -> DECLARE cursor_cust CURSOR FOR SELECT * FROM customer; 
+
+    -> DECLARE CONTINUE HANDLER FOR NOT FOUND SET loop_end = 1; 
+
+    -> OPEN cursor_cust; 
+
+    -> loop_label : LOOP 
+
+    -> FETCH cursor_cust INTO cust_id,cust_name,total_purchase; 
+
+    -> IF loop_end = 1 THEN 
+
+    -> LEAVE loop_label; 
+
+    -> END IF; 
+
+    -> IF total_purchase BETWEEN 10000 AND 20000 THEN 
+
+    -> INSERT INTO category VALUES(cust_id,cust_name,"Platinum"); 
+
+    -> ELSEIF total_purchase BETWEEN 5000 AND 9999 THEN 
+
+    -> INSERT INTO category VALUES(cust_id,cust_name,"Gold"); 
+
+    -> ELSEIF total_purchase BETWEEN 2000 AND 4999 THEN 
+
+    -> INSERT INTO category VALUES(cust_id,cust_name,"Silver"); 
+
+    -> END IF; 
+
+    -> 
+
+    -> 
+
+    -> END LOOP loop_label; 
+
+    -> END // 
+
+Query OK, 0 rows affected (0.01 sec) 
+
+  
+
+mysql> SELECT * FROM category; 
+
+    -> // 
+
+Empty set (0.00 sec) 
+
+  
+
+mysql> DELIMITER ; 
+
+mysql> CALL proc_Grade(); 
+
+Query OK, 0 rows affected (0.04 sec) 
+
+  
+
+mysql> SELECT * FROM category; 
+
++---------+-----------+----------+ 
+
+| cust_id | cust_name | class    | 
+
++---------+-----------+----------+ 
+
+|       1 | Will      | Silver   | 
+
+|       2 | John      | Gold     | 
+
+|       3 | Smith     | Silver   | 
+
+|       4 | James     | Gold     | 
+
+|       5 | Harry     | Platinum | 
+
+|       6 | Donald    | Platinum | 
+
++---------+-----------+----------+ 
+
+6 rows in set (0.00 sec) 
+
+  
+
+mysql> 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+mysql> CREATE PROCEDURE proc_grade_parametized3(IN cust_no INT)
+    -> BEGIN
+    -> DECLARE class_assigned VARCHAR(100);
+    -> DECLARE total_price INT;
+    -> SELECT total_purchase INTO total_price FROM customer WHERE cust_id=cust_no;
+    -> IF total_price BETWEEN 10000 AND 20000 THEN
+    -> SET class_assigned="Platinum";
+    -> ELSEIF total_price BETWEEN 5000 AND 9999 THEN
+    -> SET class_assigned="Gold";
+    -> ELSEIF total_price BETWEEN 2000 AND 4999 THEN
+    -> SET class_assigned="Silver";
+    -> END IF;
+    -> UPDATE category SET class=class_assigned WHERE cust_id=cust_no;
+    -> END//
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> SELECT * FROM category;
+    -> //
++---------+-----------+----------+
+| cust_id | cust_name | class    |
++---------+-----------+----------+
+|       1 | Will      | Silver   |
+|       2 | John      | Gold     |
+|       3 | Smith     | NULL     |
+|       4 | James     | Gold     |
+|       5 | Harry     | NULL     |
+|       6 | Donald    | Platinum |
+|       7 | New       | Gold     |
++---------+-----------+----------+
+7 rows in set (0.00 sec)
+
+mysql> DELIMITER ;
+mysql> CALL proc_grade_parametized3(3);
+Query OK, 1 row affected (0.01 sec)
+
+mysql> SELECT * FROM category;
++---------+-----------+----------+
+| cust_id | cust_name | class    |
++---------+-----------+----------+
+|       1 | Will      | Silver   |
+|       2 | John      | Gold     |
+|       3 | Smith     | Silver   |
+|       4 | James     | Gold     |
+|       5 | Harry     | NULL     |
+|       6 | Donald    | Platinum |
+|       7 | New       | Gold     |
++---------+-----------+----------+
+7 rows in set (0.00 sec)
+
+mysql>
+
+
+
+
+
+DELIMITER // 
+CREATE PROCEDURE proc_grade_parametized2(IN cust_no INT, OUT class_assigned VARCHAR(100)) 
+BEGIN 
+DECLARE total_price INT;
+SELECT total_purchase INTO total_price FROM customer WHERE cust_id=cust_no;
+IF total_price BETWEEN 10000 AND 20000 THEN 
+SET class_assigned="Platinum"; 
+ELSEIF total_price BETWEEN 5000 AND 9999 THEN 
+SET class_assigned="Gold"; 
+ELSEIF total_price BETWEEN 2000 AND 4999 THEN 
+SET class_assigned="Silver"; 
+END IF; 
+UPDATE category SET class=class_assigned WHERE cust_id=cust_no; 
+END// 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+mysql> DELIMITER // 
+
+CREATE FUNCTION func_grade(cust_no INT) 
+RETURNS VARCHAR(100) 
+DETERMINISTIC 
+BEGIN 
+DECLARE cust_class VARCHAR(100);
+DECLARE total_price INT;
+SELECT total_purchase INTO total_price FROM customer WHERE cust_id=cust_no;
+IF total_price BETWEEN 10000 AND 20000 THEN 
+SET cust_class = "Platinum"; 
+ELSEIF total_price BETWEEN 5000 AND 9999 THEN 
+SET cust_class = "Gold"; 
+ELSEIF total_price BETWEEN 2000 AND 4999 THEN 
+SET cust_class = "Silver"; 
+END IF; 
+UPDATE category SET class=cust_class WHERE cust_id=cust_no;
+RETURN cust_class; 
+END// 
+
+Query OK, 0 rows affected (0.01 sec) 
+
+  
+
+mysql> SELECT * FROM customer; 
+
+    -> // 
+
++---------+--------+----------------+ 
+
+| cust_id | name   | total_purchase | 
+
++---------+--------+----------------+ 
+
+|       1 | Will   |           2000 | 
+
+|       2 | John   |           5000 | 
+
+|       3 | Smith  |           4999 | 
+
+|       4 | James  |           9989 | 
+
+|       5 | Harry  |          15000 | 
+
+|       6 | Donald |          10000 | 
+
++---------+--------+----------------+ 
+
+6 rows in set (0.00 sec) 
+
+  
+
+mysql> DELIMITER; 
+
+    -> INSERT INTO customer VALUES (7,"New",5200); 
+
+    -> ^C 
+
+mysql> DELIMITER ; 
+
+mysql> INSERT INTO customer VALUES (7,"New",5200); 
+
+Query OK, 1 row affected (0.01 sec) 
+
+  
+
+mysql> SELECT func_grade(7,5200); 
+
++--------------------+ 
+
+| func_grade(7,5200) | 
+
++--------------------+ 
+
+| Gold               | 
+
++--------------------+ 
+
+1 row in set (0.01 sec) 
+
+  
+
+mysql> 

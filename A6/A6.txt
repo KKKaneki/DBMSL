@@ -1,0 +1,161 @@
+mysql> CREATE DATABASE assignment6
+    -> ;
+Query OK, 1 row affected (0.06 sec)
+
+mysql> USE assignment6;
+Database changed
+mysql> CREATE TABLE O_EmpId(
+    -> id INT NOT NULL,
+    -> name VARCHAR(100));
+Query OK, 0 rows affected (0.14 sec)
+
+mysql> CREATE TABLE N_EmpId(
+    -> id INT NOT NULL,
+    -> name VARCHAR(100));
+Query OK, 0 rows affected (0.06 sec)
+
+mysql> INSERT INTO O_EmpId VALUES (1,"Pradyumna"), (2,"Sanket"), (3,"Sahil"),(4,"Shubham");
+Query OK, 4 rows affected (0.01 sec)
+Records: 4  Duplicates: 0  Warnings: 0
+
+mysql> INSERT INTO N_EmpId VALUES (1,"Pradyumna"), (2,"Sanket"), (5,"John"),(6,"Eddard");
+Query OK, 4 rows affected (0.03 sec)
+Records: 4  Duplicates: 0  Warnings: 0
+
+
+mysql> SELECT * FROM O_EmpId;
++----+-----------+
+| id | name      |
++----+-----------+
+|  1 | Pradyumna |
+|  2 | Sanket    |
+|  3 | Sahil     |
+|  4 | Shubham   |
++----+-----------+
+4 rows in set (0.01 sec)
+
+mysql> SELECT * FROM N_EmpId;
++----+-----------+
+| id | name      |
++----+-----------+
+|  1 | Pradyumna |
+|  2 | Sanket    |
+|  5 | John      |
+|  6 | Eddard    |
++----+-----------+
+4 rows in set (0.00 sec)
+
+DELIMITER //
+CREATE PROCEDURE mergeTable()
+BEGIN
+DECLARE n_id INT;
+DECLARE n_name VARCHAR(100);
+DECLARE o_id INT;
+DECLARE flag INT;
+DECLARE ex INT DEFAULT 0;
+DECLARE o_name VARCHAR(100);
+DECLARE o_cursor CURSOR FOR SELECT id,name FROM O_EmpId WHERE id NOT IN (SELECT id FROM N_EmpId);
+DECLARE CONTINUE HANDLER FOR NOT FOUND SET ex=1; 
+OPEN o_cursor;
+a_loop: LOOP
+FETCH o_cursor INTO o_id,o_name;
+IF ex=1 THEN
+LEAVE a_loop;
+END IF;
+INSERT INTO N_EmpId(id,name) VALUES(o_id,o_name);
+END LOOP a_loop;
+CLOSE o_cursor;
+END;
+//
+DELIMITER ;
+
+
+mysql> DELIMITER //
+mysql> CREATE PROCEDURE mergeTable()
+    -> BEGIN
+    -> DECLARE n_id INT;
+    -> DECLARE n_name VARCHAR(100);
+    -> DECLARE o_id INT;
+    -> DECLARE flag INT;
+    -> DECLARE ex INT DEFAULT 0;
+    -> DECLARE o_name VARCHAR(100);
+    -> DECLARE o_cursor CURSOR FOR SELECT id,name FROM O_EmpId WHERE id NOT IN (SELECT id FROM N_EmpId);
+    -> DECLARE CONTINUE HANDLER FOR NOT FOUND SET ex=1;
+    -> OPEN o_cursor;
+    -> a_loop: LOOP
+    -> FETCH o_cursor INTO o_id,o_name;
+    -> IF ex=1 THEN
+    -> LEAVE a_loop;
+    -> END IF;
+    -> INSERT INTO N_EmpId(id,name) VALUES(o_id,o_name);
+    -> END LOOP a_loop;
+    -> CLOSE o_cursor;
+    -> END;
+    -> //
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> DELIMITER ;
+mysql> SELECT * FROM n_empid;
++----+-----------+
+| id | name      |
++----+-----------+
+|  1 | Pradyumna |
+|  2 | Sanket    |
+|  5 | John      |
+|  6 | Eddard    |
++----+-----------+
+4 rows in set (0.00 sec)
+
+mysql> SELECT * FROM o_empid;
++----+-----------+
+| id | name      |
++----+-----------+
+|  1 | Pradyumna |
+|  2 | Sanket    |
+|  3 | Sahil     |
+|  4 | Shubham   |
++----+-----------+
+4 rows in set (0.00 sec)
+
+mysql> CALL mergeTable;
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> SELECT * FROM o_empid;
++----+-----------+
+| id | name      |
++----+-----------+
+|  1 | Pradyumna |
+|  2 | Sanket    |
+|  3 | Sahil     |
+|  4 | Shubham   |
++----+-----------+
+4 rows in set (0.00 sec)
+
+mysql> SELECT * FROM n_empid;
++----+-----------+
+| id | name      |
++----+-----------+
+|  1 | Pradyumna |
+|  2 | Sanket    |
+|  5 | John      |
+|  6 | Eddard    |
+|  3 | Sahil     |
+|  4 | Shubham   |
++----+-----------+
+6 rows in set (0.00 sec)
+
+mysql>
+
+
+
+
+
+
+
+
+
+
+
+
+
+

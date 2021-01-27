@@ -1,0 +1,214 @@
+CREATE TABLE borrower(
+rollno INT,
+name VARCHAR(100),
+date_of_issue DATE,
+name_of_book VARCHAR(100),
+status VARCHAR(1),
+PRIMARY KEY(rollno));
+
+
+mysql> DESCRIBE borrower;
++---------------+--------------+------+-----+---------+-------+
+| Field         | Type         | Null | Key | Default | Extra |
++---------------+--------------+------+-----+---------+-------+
+| rollno        | int          | NO   | PRI | NULL    |       |
+| name          | varchar(100) | YES  |     | NULL    |       |
+| date_of_issue | date         | YES  |     | NULL    |       |
+| name_of_book  | varchar(100) | YES  |     | NULL    |       |
+| status        | varchar(1)   | YES  |     | NULL    |       |
++---------------+--------------+------+-----+---------+-------+
+5 rows in set (0.01 sec)
+
+mysql>
+
+
+
+mysql> CREATE TABLE fine(	
+    -> rollno INT NOT NULL,
+    -> date_paid DATE,
+    -> amt INT,
+    -> FOREIGN KEY(rollno) REFERENCES borrower(rollno) ON DELETE CASCADE);
+Query OK, 0 rows affected (0.11 sec)
+
+mysql> DESCRIBE fine;
++-----------+------+------+-----+---------+-------+
+| Field     | Type | Null | Key | Default | Extra |
++-----------+------+------+-----+---------+-------+
+| rollno    | int  | NO   | MUL | NULL    |       |
+| date_paid | date | YES  |     | NULL    |       |
+| amt       | int  | YES  |     | NULL    |       |
++-----------+------+------+-----+---------+-------+
+3 rows in set (0.01 sec)
+
+mysql>
+
+mysql> INSERT INTO borrower VALUES(3,"Pranav","2020-09-14","Harry Potter 3","I");
+Query OK, 1 row affected (0.00 sec)
+
+mysql> INSERT INTO borrower VALUES(2,"Shubham","2020-09-13","Harry Potter 2","I");
+Query OK, 1 row affected (0.01 sec)
+
+mysql> INSERT INTO borrower VALUES(1,"Pradyumna","2020-09-12","Harry Potter 1","I");
+Query OK, 1 row affected (0.01 sec)
+
+mysql> SELECT * FROM borrower;
++--------+-----------+---------------+----------------+--------+
+| rollno | name      | date_of_issue | name_of_book   | status |
++--------+-----------+---------------+----------------+--------+
+|      1 | Pradyumna | 2020-09-12    | Harry Potter 1 | I      |
+|      2 | Shubham   | 2020-09-13    | Harry Potter 2 | I      |
+|      3 | Pranav    | 2020-09-14    | Harry Potter 3 | I      |
++--------+-----------+---------------+----------------+--------+
+3 rows in set (0.00 sec)
+
+mysql>
+
+
+
+
+mysql> DELIMITER //
+mysql> CREATE PROCEDURE calculateFine(IN roll_no INT, IN title VARCHAR(100))
+    -> BEGIN
+    -> DECLARE no_of_days INT;
+    -> DECLARE date_issued DATE;
+    -> DECLARE fineAmount INT;
+    -> DECLARE EXIT HANDLER FOR SQLEXCEPTION SELECT "Error has occurred. Exception Occurred.";
+    -> SELECT date_of_issue INTO date_issued
+    -> FROM borrower
+    -> WHERE rollno=roll_no AND name_of_book=title;
+    ->
+    -> SELECT DATEDIFF(CURDATE(),date_issued) INTO no_of_days;
+    -> IF no_of_days BETWEEN 15 AND 30 THEN
+    -> SET fineAmount = 5*no_of_days;
+    -> INSERT INTO fine VALUES(roll_no,CURDATE(),fineAmount);
+    -> ELSEIF no_of_days > 30 THEN
+    -> SET fineAmount = 50*no_of_days;
+    -> INSERT INTO fine VALUES(roll_no,CURDATE(),fineAmount);
+    -> END IF;
+    -> UPDATE borrower
+    -> SET status="R"
+    -> WHERE rollno=roll_no AND name_of_book=title;
+    -> END;
+    -> //
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> DELIMITER ;
+mysql> SELECT * FROM borrower;
++--------+-----------+---------------+----------------+--------+
+| rollno | name      | date_of_issue | name_of_book   | status |
++--------+-----------+---------------+----------------+--------+
+|      1 | Pradyumna | 2020-09-12    | Harry Potter 1 | R      |
+|      2 | Shubham   | 2020-09-13    | Harry Potter 2 | R      |
+|      3 | Pranav    | 2020-09-14    | Harry Potter 3 | I      |
+|      4 | John      | 2020-08-29    | Harry Potter 1 | I      |
+|      5 | Will      | 2020-07-29    | Harry Potter 2 | I      |
++--------+-----------+---------------+----------------+--------+
+5 rows in set (0.00 sec)
+
+mysql> SELECT * FROM fine;
+Empty set (0.00 sec)
+
+mysql> CALL calculateFine(3,"Harry Potter 4");
+Query OK, 0 rows affected (0.00 sec)
+
+mysql>
+mysql> SELECT * FROM borrower;
++--------+-----------+---------------+----------------+--------+
+| rollno | name      | date_of_issue | name_of_book   | status |
++--------+-----------+---------------+----------------+--------+
+|      1 | Pradyumna | 2020-09-12    | Harry Potter 1 | R      |
+|      2 | Shubham   | 2020-09-13    | Harry Potter 2 | R      |
+|      3 | Pranav    | 2020-09-14    | Harry Potter 3 | I      |
+|      4 | John      | 2020-08-29    | Harry Potter 1 | I      |
+|      5 | Will      | 2020-07-29    | Harry Potter 2 | I      |
++--------+-----------+---------------+----------------+--------+
+5 rows in set (0.00 sec)
+
+mysql> CALL calculateFine(3,"Harry Potter 3");
+Query OK, 1 row affected (0.01 sec)
+
+mysql> SELECT * FROM borrower;
++--------+-----------+---------------+----------------+--------+
+| rollno | name      | date_of_issue | name_of_book   | status |
++--------+-----------+---------------+----------------+--------+
+|      1 | Pradyumna | 2020-09-12    | Harry Potter 1 | R      |
+|      2 | Shubham   | 2020-09-13    | Harry Potter 2 | R      |
+|      3 | Pranav    | 2020-09-14    | Harry Potter 3 | R      |
+|      4 | John      | 2020-08-29    | Harry Potter 1 | I      |
+|      5 | Will      | 2020-07-29    | Harry Potter 2 | I      |
++--------+-----------+---------------+----------------+--------+
+5 rows in set (0.00 sec)
+
+mysql> CALL calculateFine(4,"Harry Potter 1");
+Query OK, 1 row affected (0.01 sec)
+
+mysql> SELECT * FROM borrower;
++--------+-----------+---------------+----------------+--------+
+| rollno | name      | date_of_issue | name_of_book   | status |
++--------+-----------+---------------+----------------+--------+
+|      1 | Pradyumna | 2020-09-12    | Harry Potter 1 | R      |
+|      2 | Shubham   | 2020-09-13    | Harry Potter 2 | R      |
+|      3 | Pranav    | 2020-09-14    | Harry Potter 3 | R      |
+|      4 | John      | 2020-08-29    | Harry Potter 1 | R      |
+|      5 | Will      | 2020-07-29    | Harry Potter 2 | I      |
++--------+-----------+---------------+----------------+--------+
+5 rows in set (0.00 sec)
+
+mysql>
+mysql>
+mysql> CALL calculateFine(5,"Harry Potter 2");
+Query OK, 1 row affected (0.01 sec)
+
+mysql> SELECT * FROM fine;
++--------+------------+------+
+| rollno | date_paid  | amt  |
++--------+------------+------+
+|      5 | 2020-09-12 | 2250 |
++--------+------------+------+
+1 row in set (0.00 sec)
+
+mysql>
+
+
+mysql> INSERT INTO borrower VALUES(6,"Mickey","2020-08-15","Harry Potter 3","I");
+Query OK, 1 row affected (0.00 sec)
+
+mysql> SELECT * FROM borrower;
++--------+-----------+---------------+----------------+--------+
+| rollno | name      | date_of_issue | name_of_book   | status |
++--------+-----------+---------------+----------------+--------+
+|      1 | Pradyumna | 2020-09-12    | Harry Potter 1 | R      |
+|      2 | Shubham   | 2020-09-13    | Harry Potter 2 | R      |
+|      3 | Pranav    | 2020-09-14    | Harry Potter 3 | R      |
+|      4 | John      | 2020-08-29    | Harry Potter 1 | R      |
+|      5 | Will      | 2020-07-29    | Harry Potter 2 | R      |
+|      6 | Mickey    | 2020-08-15    | Harry Potter 3 | I      |
++--------+-----------+---------------+----------------+--------+
+6 rows in set (0.00 sec)
+
+mysql> CALL calculateFine(6,"Harry Potter 3");
+Query OK, 1 row affected (0.01 sec)
+
+mysql> SELECT * FROM borrower;
++--------+-----------+---------------+----------------+--------+
+| rollno | name      | date_of_issue | name_of_book   | status |
++--------+-----------+---------------+----------------+--------+
+|      1 | Pradyumna | 2020-09-12    | Harry Potter 1 | R      |
+|      2 | Shubham   | 2020-09-13    | Harry Potter 2 | R      |
+|      3 | Pranav    | 2020-09-14    | Harry Potter 3 | R      |
+|      4 | John      | 2020-08-29    | Harry Potter 1 | R      |
+|      5 | Will      | 2020-07-29    | Harry Potter 2 | R      |
+|      6 | Mickey    | 2020-08-15    | Harry Potter 3 | R      |
++--------+-----------+---------------+----------------+--------+
+6 rows in set (0.00 sec)
+
+mysql> SELECT * FROM fine;
++--------+------------+------+
+| rollno | date_paid  | amt  |
++--------+------------+------+
+|      5 | 2020-09-12 | 2250 |
+|      6 | 2020-09-12 |  140 |
++--------+------------+------+
+2 rows in set (0.00 sec)
+
+mysql>

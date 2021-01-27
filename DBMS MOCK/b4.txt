@@ -1,0 +1,93 @@
+db.student.insert({name: "Pradyumna",subject: "CN",marks: 50});
+db.student.insert({name: "Pradyumna",subject: "DBMS",marks: 60});
+db.student.insert({name: "Pradyumna",subject: "DSA",marks: 50});
+db.student.insert({name: "Shubham",subject: "CN",marks: 80});
+db.student.insert({name: "Shubham",subject: "DSA",marks: 40});
+
+
+
+
+
+1) 
+
+db.student.mapReduce(function(){ emit(this.name,this.marks)},function(key,value){ return Array.sum(value);},{out:'total_marks'});
+
+2)
+db.student.mapReduce(function(){ emit(this.name,1)},function(key,value){ return Array.sum(value);},{out:'no_of_courses'});
+
+3) 
+db.student.mapReduce(function(){ emit(this.name,this.marks)},function(key,value){ return Array.sum(value);},{out:'Total_Pradyumna',query:{name:"Pradyumna"}});
+
+
+
+> use dbmsl_mock2
+switched to db dbmsl_mock2
+> db.student.insert({name: "Pradyumna",subject: "CN",marks: 50});
+WriteResult({ "nInserted" : 1 })
+> db.student.insert({name: "Pradyumna",subject: "DSA",marks: 50});
+WriteResult({ "nInserted" : 1 })
+> db.student.insert({name: "Pradyumna",subject: "DBMS",marks: 60});
+WriteResult({ "nInserted" : 1 })
+> db.student.insert({name: "Shubham",subject: "CN",marks: 80});
+WriteResult({ "nInserted" : 1 })
+> db.student.insert({name: "Shubham",subject: "DSA",marks: 40});
+WriteResult({ "nInserted" : 1 })
+>
+
+db.student.find();
+{ "_id" : ObjectId("5fc9940f4212ec3076cef7fa"), "name" : "Pradyumna", "subject" : "CN", "marks" : 50 }
+{ "_id" : ObjectId("5fc9942b4212ec3076cef7fb"), "name" : "Pradyumna", "subject" : "DSA", "marks" : 50 }
+{ "_id" : ObjectId("5fc994304212ec3076cef7fc"), "name" : "Pradyumna", "subject" : "DBMS", "marks" : 60 }
+{ "_id" : ObjectId("5fc994584212ec3076cef7fd"), "name" : "Shubham", "subject" : "CN", "marks" : 80 }
+{ "_id" : ObjectId("5fc9945c4212ec3076cef7fe"), "name" : "Shubham", "subject" : "DSA", "marks" : 40 }
+>
+
+> db.student.mapReduce(function(){ emit(this.name,this.marks)},function(key,value){ return Array.sum(value);},{out:'total_marks'});
+{
+        "result" : "total_marks",
+        "timeMillis" : 237,
+        "counts" : {
+                "input" : 5,
+                "emit" : 5,
+                "reduce" : 2,
+                "output" : 2
+        },
+        "ok" : 1
+}
+> db.total_marks.find();
+{ "_id" : "Pradyumna", "value" : 160 }
+{ "_id" : "Shubham", "value" : 120 }
+>
+>
+>  db.student.mapReduce(function(){ emit(this.name,1)},function(key,value){ return Array.sum(value);},{out:'no_of_courses'});
+{
+        "result" : "no_of_courses",
+        "timeMillis" : 53,
+        "counts" : {
+                "input" : 5,
+                "emit" : 5,
+                "reduce" : 2,
+                "output" : 2
+        },
+        "ok" : 1
+}
+> db.no_of_courses.find();
+{ "_id" : "Pradyumna", "value" : 3 }
+{ "_id" : "Shubham", "value" : 2 }
+
+
+
+> db.student.mapReduce(function(){ emit(this.name,this.marks)},function(key,value){ return Array.sum(value);},{out:'Total_Pradyumna',query:{name:"Pradyumna"}});
+{
+        "result" : "Total_Pradyumna",
+        "timeMillis" : 42,
+        "counts" : {
+                "input" : 3,
+                "emit" : 3,
+                "reduce" : 1,
+                "output" : 1
+        },
+        "ok" : 1
+}
+> db.Total_Pradyumna.find();
+{ "_id" : "Pradyumna", "value" : 160 }

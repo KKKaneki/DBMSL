@@ -1,0 +1,245 @@
+INSERT QUERIES
+
+db.student.insert({rollno:1,name:"Pradyumna",college:{name:"PICT",city:"Pune"},branch:"Computer",year:"TE",certificates:[ {name:"Basics of C",date_completed: new Date("2020-03-15"),instructor:"abc",price:600},{name:"Basics of C++",date_completed: new Date("2020-04-15"),instructor:"abc",price:600},{name:"Data Structures in C/C++",date_completed: new Date("2020-06-15"),instructor:"xyz",price:600}]});
+
+db.student.insert({rollno:2,name:"Shubham",college:{name:"PICT",city:"Pune"},branch:"Computer",year:"SE",certificates:[ {name:"Basics of C",date_completed: new Date("2020-01-15"),instructor:"abc",price:600},{name:"Data Structures in C/C++",date_completed: new Date("2020-02-15"),instructor:"xyz",price:800}]});
+
+db.student.insert({rollno:2,name:"Sangat",college:{name:"PICT",city:"Pune"},branch:"Computer",year:"TE",certificates:[ {name:"Basics of C#",date_completed: new Date("2020-01-20"),instructor:"mno",price:1200},{name:"Data Science",date_completed: new Date("2020-02-15"),instructor:"pqr",price:2000}]});
+
+db.student.insert({rollno:3,name:"Vinayak",college:{name:"VJTI",city:"Mumbai"},branch:"IT",year:"TE",certificates:[ {name:"Basics of Python",date_completed: new Date("2020-01-20"),instructor:"mno",price:1200},{name:"Data Science",date_completed: new Date("2020-02-15"),instructor:"pqr",price:2000},{name:"Cyber Security",date_completed: new Date("2020-10-15"),instructor:"pqr",price:800}]});
+
+db.student.insert({rollno:4,name:"Vinay",college:{name:"VJTI",city:"Mumbai"},branch:"IT",year:"TE",certificates:[ {name:"Basics of Python",date_completed: new Date("2020-01-20"),instructor:"mno",price:1200},{name:"Cyber Security",date_completed: new Date("2020-10-15"),instructor:"pqr",price:800}]});
+
+
+AGGREGATION
+
+db.student.aggregate([{$match : { "college.name": "PICT"}}]).pretty();
+
+db.student.aggregate([{$match: {"year":"TE"}},{$count: "year"}]);
+
+db.student.aggregate([{$match: {"college.name":"PICT"}},{$sort:{rollno: -1}}]);
+
+db.student.aggregate([{$group: {"_id":{"Year": "$year"},"count":{$sum:1}}}]);
+
+db.student.aggregate([{$group: {"_id":{"Collge Name":"$college.name"},count:{$sum:1}}}]);
+
+db.student.aggregate([{$group: {"_id":{"Collge Name":"$college.name"},count:{$sum:1}}},{$sort:{"count":-1}}]);
+
+db.student.aggregate([{$project: {"name": 1,"Certificates": {$size: "$certificates"}}}]);
+
+db.student.aggregate([{$match:{"college.name":"PICT"}},{$project: {"name": 1,"Certificates": {$size: "$certificates"}}}]);
+
+
+
+
+INDEXING
+
+db.student.createIndex({"college.name":1,"branch":1}); 
+
+db.student.createIndex({"rollno":-1});
+
+db.student.createIndex({"college.name":-1});
+
+db.student.createIndex({"name":1,"rollno":-1},{partialFilterExpression: {"certificates":{$gte:2}}});
+
+
+db.student.aggregate([{$match:{"college.name":"PICT","branch":"Computer"}},{$sort:{rollno:-1}}],{hint:{"college.name":1,"branch":1}}).pretty();
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+> db.student.insert({rollno:1,name:"Pradyumna",college:{name:"PICT",city:"Pune"},branch:"Computer",year:"TE",certificates:[ {name:"Basics of C",date_completed: new Date("2020-03-15"),instructor:"abc",price:600},{name:"Basics of C++",date_completed: new Date("2020-04-15"),instructor:"abc",price:600},{name:"Data Structures in C/C++",date_completed: new Date("2020-06-15"),instructor:"xyz",price:600}]});
+WriteResult({ "nInserted" : 1 })
+>
+> db.student.insert({rollno:2,name:"Shubham",college:{name:"PICT",city:"Pune"},branch:"Computer",year:"SE",certificates:[ {name:"Basics of C",date_completed: new Date("2020-01-15"),instructor:"abc",price:600},{name:"Data Structures in C/C++",date_completed: new Date("2020-02-15"),instructor:"xyz",price:800}]});
+WriteResult({ "nInserted" : 1 })
+>
+> db.student.insert({rollno:2,name:"Sangat",college:{name:"PICT",city:"Pune"},branch:"Computer",year:"TE",certificates:[ {name:"Basics of C#",date_completed: new Date("2020-01-20"),instructor:"mno",price:1200},{name:"Data Science",date_completed: new Date("2020-02-15"),instructor:"pqr",price:2000}]});
+WriteResult({ "nInserted" : 1 })
+> db.student.insert({rollno:3,name:"Vinayak",college:{name:"VJTI",city:"Mumbai"},branch:"IT",year:"TE",certificates:[ {name:"Basics of Python",date_completed: new Date("2020-01-20"),instructor:"mno",price:1200},{name:"Data Science",date_completed: new Date("2020-02-15"),instructor:"pqr",price:2000},{name:"Cyber Security",date_completed: new Date("2020-10-15"),instructor:"pqr",price:800}]});
+WriteResult({ "nInserted" : 1 })
+> db.student.insert({rollno:4,name:"Vinay",college:{name:"VJTI",city:"Mumbai"},branch:"IT",year:"TE",certificates:[ {name:"Basics of Python",date_completed: new Date("2020-01-20"),instructor:"mno",price:1200},{name:"Cyber Security",date_completed: new Date("2020-10-15"),instructor:"pqr",price:800}]});
+WriteResult({ "nInserted" : 1 })
+
+
+AGGREGATION
+> db.student.aggregate([{$match: {"year":"TE"}},{$count: "year"}]).pretty();
+{ "year" : 4 }
+>             
+
+> db.student.aggregate([{$match: {"college.name":"PICT"}},{$sort:{rollno: -1}}]);
+{ "_id" : ObjectId("5f9bb6a8dc0e939096020b92"), "rollno" : 2, "name" : "Shubham", "college" : { "name" : "PICT", "city" : "Pune" }, "branch" : "Computer", "year" : "SE", "certificates" : [ { "name" : "Basics of C", "date_completed" : ISODate("2020-01-15T00:00:00Z"), "instructor" : "abc", "price" : 600 }, { "name" : "Data Structures in C/C++", "date_completed" : ISODate("2020-02-15T00:00:00Z"), "instructor" : "xyz", "price" : 800 } ] }
+{ "_id" : ObjectId("5f9bb70edc0e939096020b93"), "rollno" : 2, "name" : "Sangat", "college" : { "name" : "PICT", "city" : "Pune" }, "branch" : "Computer", "year" : "TE", "certificates" : [ { "name" : "Basics of C#", "date_completed" : ISODate("2020-01-20T00:00:00Z"), "instructor" : "mno", "price" : 1200 }, { "name" : "Data Science", "date_completed" : ISODate("2020-02-15T00:00:00Z"), "instructor" : "pqr", "price" : 2000 } ] }
+{ "_id" : ObjectId("5f9bb4a5dc0e939096020b91"), "rollno" : 1, "name" : "Pradyumna", "college" : { "name" : "PICT", "city" : "Pune" }, "branch" : "Computer", "year" : "TE", "certificates" : [ { "name" : "Basics of C", "date_completed" : ISODate("2020-03-15T00:00:00Z"), "instructor" : "abc", "price" : 600 }, { "name" : "Basics of C++", "date_completed" : ISODate("2020-04-15T00:00:00Z"), "instructor" : "abc", "price" : 600 }, { "name" : "Data Structures in C/C++", "date_completed" : ISODate("2020-06-15T00:00:00Z"), "instructor" : "xyz", "price" : 600 } ] }
+>   
+
+
+> db.student.aggregate([{$group: {"_id":{"Year": "$year"},"count":{$sum:1}}}]);
+{ "_id" : { "Year" : "SE" }, "count" : 1 }
+{ "_id" : { "Year" : "TE" }, "count" : 4 }
+
+> db.student.aggregate([{$group: {"_id":{"Collge Name":"$college.name"},count:{$sum:1}}}]);
+{ "_id" : { "Collge Name" : "VJTI" }, "count" : 2 }
+{ "_id" : { "Collge Name" : "PICT" }, "count" : 3 }
+> 
+
+> db.student.aggregate([{$group: {"_id":{"Collge Name":"$college.name"},count:{$sum:1}}},{$sort:{"count":1}}]);
+{ "_id" : { "Collge Name" : "VJTI" }, "count" : 2 }
+{ "_id" : { "Collge Name" : "PICT" }, "count" : 3 }
+> db.student.aggregate([{$group: {"_id":{"Collge Name":"$college.name"},count:{$sum:1}}},{$sort:{"count":-1}}]);
+{ "_id" : { "Collge Name" : "PICT" }, "count" : 3 }
+{ "_id" : { "Collge Name" : "VJTI" }, "count" : 2 }
+>       
+
+
+
+
+
+ 
+
+> db.student.aggregate([{$match:{"college.name":"PICT","branch":"Computer"}},{$sort:{rollno:-1}}],{hint:{"college.name":1,"branch":1}}).pretty();
+{
+        "_id" : ObjectId("5f9bb6a8dc0e939096020b92"),
+        "rollno" : 2,
+        "name" : "Shubham",
+        "college" : {
+                "name" : "PICT",
+                "city" : "Pune"
+        },
+        "branch" : "Computer",
+        "year" : "SE",
+        "certificates" : [
+                {
+                        "name" : "Basics of C",
+                        "date_completed" : ISODate("2020-01-15T00:00:00Z"),
+                        "instructor" : "abc",
+                        "price" : 600
+                },
+                {
+                        "name" : "Data Structures in C/C++",
+                        "date_completed" : ISODate("2020-02-15T00:00:00Z"),
+                        "instructor" : "xyz",
+                        "price" : 800
+                }
+        ]
+}
+{
+        "_id" : ObjectId("5f9bb70edc0e939096020b93"),
+        "rollno" : 2,
+        "name" : "Sangat",
+        "college" : {
+                "name" : "PICT",
+                "city" : "Pune"
+        },
+        "branch" : "Computer",
+        "year" : "TE",
+        "certificates" : [
+                {
+                        "name" : "Basics of C#",
+                        "date_completed" : ISODate("2020-01-20T00:00:00Z"),
+                        "instructor" : "mno",
+                        "price" : 1200
+                },
+                {
+                        "name" : "Data Science",
+                        "date_completed" : ISODate("2020-02-15T00:00:00Z"),
+                        "instructor" : "pqr",
+                        "price" : 2000
+                }
+        ]
+}
+{
+        "_id" : ObjectId("5f9bb4a5dc0e939096020b91"),
+        "rollno" : 1,
+        "name" : "Pradyumna",
+        "college" : {
+                "name" : "PICT",
+                "city" : "Pune"
+        },
+        "branch" : "Computer",
+        "year" : "TE",
+        "certificates" : [
+                {
+                        "name" : "Basics of C",
+                        "date_completed" : ISODate("2020-03-15T00:00:00Z"),
+                        "instructor" : "abc",
+                        "price" : 600
+                },
+                {
+                        "name" : "Basics of C++",
+                        "date_completed" : ISODate("2020-04-15T00:00:00Z"),
+                        "instructor" : "abc",
+                        "price" : 600
+                },
+                {
+                        "name" : "Data Structures in C/C++",
+                        "date_completed" : ISODate("2020-06-15T00:00:00Z"),
+                        "instructor" : "xyz",
+                        "price" : 600
+                }
+        ]
+}
+>
+
+
+> db.student.aggregate([{$project: {"name": 1,"Certificates": {$size: "$certificates"}}}]);
+{ "_id" : ObjectId("5fa1205be2919a2eea594a62"), "name" : "Pradyumna", "Certificates" : 3 }
+{ "_id" : ObjectId("5fa1206ce2919a2eea594a63"), "name" : "Shubham", "Certificates" : 2 }
+{ "_id" : ObjectId("5fa12075e2919a2eea594a64"), "name" : "Sangat", "Certificates" : 2 }
+{ "_id" : ObjectId("5fa1207ee2919a2eea594a65"), "name" : "Vinayak", "Certificates" : 3 }
+{ "_id" : ObjectId("5fa12087e2919a2eea594a66"), "name" : "Vinay", "Certificates" : 2 }
+> 
+
+> db.student.aggregate([{$match:{"college.name":"PICT"}},{$project: {"name": 1,"Certificates": {$size: "$certificates"}}}]);
+{ "_id" : ObjectId("5fa1205be2919a2eea594a62"), "name" : "Pradyumna", "Certificates" : 3 }
+{ "_id" : ObjectId("5fa1206ce2919a2eea594a63"), "name" : "Shubham", "Certificates" : 2 }
+{ "_id" : ObjectId("5fa12075e2919a2eea594a64"), "name" : "Sangat", "Certificates" : 2 }
+> 
+
+
+
+
+
+
+> db.student.createIndex({"college.name":1,"branch":1});
+{
+        "createdCollectionAutomatically" : false,
+        "numIndexesBefore" : 1,
+        "numIndexesAfter" : 2,
+        "ok" : 1
+}
+> 
+> db.student.createIndex({"rollno":-1});
+{
+        "createdCollectionAutomatically" : false,
+        "numIndexesBefore" : 2,
+        "numIndexesAfter" : 3,
+        "ok" : 1
+}
+> 
+
+> db.student.createIndex({"college.name":-1});
+{
+        "createdCollectionAutomatically" : false,
+        "numIndexesBefore" : 3,
+        "numIndexesAfter" : 4,
+        "ok" : 1
+}
+> 
+> db.student.createIndex({"name":1,"rollno":-1},{partialFilterExpression: {"certificates":{$gte:2}}});
+{
+        "createdCollectionAutomatically" : false,
+        "numIndexesBefore" : 4,
+        "numIndexesAfter" : 5,
+        "ok" : 1
+}         

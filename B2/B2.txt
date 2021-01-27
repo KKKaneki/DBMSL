@@ -1,0 +1,430 @@
+
+INSERT
+db.student.insert({rollno:1,name:"Pradyumna",age:20,college:{name:"PICT",city:"Pune"},branch:"Computer",year:"TE"});
+db.student.insert({rollno:2,name:"Shubham",age:20,college:{name:"PICT",city:"Pune"},branch:"Computer",year:"SE"});
+db.student.insert({rollno:2,name:"Sangat",age:20,college:{name:"PICT",city:"Pune"},branch:"Computer",year:"TE"});
+db.student.insert({rollno:3,name:"Vinayak",age:20,college:{name:"VJTI",city:"Mumbai"},branch:"IT",year:"TE"});     
+db.student.insert({rollno:4,name:"Vinay",age:20,college:{name:"VJTI",city:"Mumbai"},branch:"IT",year:"TE"});
+db.student.insert({rollno:5,name:"Vinay",age:20,college:{name:"PICT",city:"Pune"},branch:"IT",year:"SE"});
+db.student.insert({rollno:6,name:"Mark",age:21,college:{name:"PICT",city:"Pune"},branch:"ENTC",year:"TE"});
+db.student.insert({rollno:8,name:"Joe",age:21,college:{name:"COEP",city:"Pune"},branch:"Civil",year:"BE"});
+db.student.insert({rollno:9,name:"Mike",age:21,college:{name:"COEP",city:"Pune"},branch:"Civil",year:"BE"});
+db.student.insert({rollno:10,name:"Joe",age:21,college:{name:"COEP",city:"Pune"},branch:"Mechnical",year:"TE"});
+db.student.insert({rollno:11,name:"Steve",age:19,college:{name:"COEP",city:"Pune"},branch:"Mechnical",year:"FE"});
+db.student.insert({rollno:12,name:"Ben",age:19,college:{name:"COEP",city:"Pune"},branch:"Mechnical",year:"FE"});
+db.student.insert({rollno:13,name:"Henry",age:19,college:{name:"PICT",city:"Pune"},branch:"Mechnical",year:"FE"});
+db.student.insert({rollno:14,name:"Prathamesh",age:19,college:{name:"PICT",city:"Pune"},branch:"ENTC",year:"FE"});
+db.student.insert({rollno:15,name:"Ram",age:20,college:{name:"PICT",city:"Pune"},branch:"ENTC",year:"TE"});
+
+db.student.save({rollno:16,name:"Ramesh",age:25,college:{name:"PICT",city:"Pune"},branch:"ENTC",year:"BE"});
+
+
+
+
+
+FIND
+db.student.find();
+db.student.find({rollno:2});
+db.student.find({"college.name":"PICT",year:"TE"});
+db.student.find({$or:[{name:"Pradyumna"},{branch:"IT"}]});
+db.student.find({$and:[{year:"SE"},{"college.city":"Pune"}]});
+
+
+UPDATE
+db.student.update({year:"FE"},{$set:{year:"SE"}});
+db.student.updateMany({year:"FE"},{$set:{year:"SE"}});
+
+db.student.update({rollno:30},{$set:{rollno:31,name:"New Person",age:50,college:{name:"New College",city:"Pune"},branch:"Civil","year":"FE"}});
+
+db.student.update({rollno:30},{$set:{rollno:31,name:"New Person",age:50,college:{name:"New College",city:"Pune"},branch:"Civil","year":"FE"}},{upsert:true});
+
+
+REMOVE
+db.student.remove({rollno:31});
+db.student.remove({$or:[{"college.name":"VJTI"},{year:"BE"}]});
+db.student.remove({age:19,rollno:1});
+// remove one document only
+db.student.remove({"college.name":"COEP"},1);
+
+
+
+> use dbmsl_b2;
+switched to db dbmsl_b2
+> db.student.insert({rollno:1,name:"Pradyumna",age:20,college:{name:"PICT",city:"Pune"},branch:"Computer",year:"TE"});
+WriteResult({ "nInserted" : 1 })
+> db.student.insert({rollno:2,name:"Shubham",age:20,college:{name:"PICT",city:"Pune"},branch:"Computer",year:"SE"});
+WriteResult({ "nInserted" : 1 })
+> db.student.insert({rollno:2,name:"Sangat",age:20,college:{name:"PICT",city:"Pune"},branch:"Computer",year:"TE"});
+WriteResult({ "nInserted" : 1 })
+> db.student.insert({rollno:3,name:"Vinayak",age:20,college:{name:"VJTI",city:"Mumbai"},branch:"IT",year:"TE"});
+WriteResult({ "nInserted" : 1 })
+> db.student.insert({rollno:4,name:"Vinay",age:20,college:{name:"VJTI",city:"Mumbai"},branch:"IT",year:"TE"});
+WriteResult({ "nInserted" : 1 })
+> db.student.insert({rollno:5,name:"Vinay",age:20,college:{name:"PICT",city:"Pune"},branch:"IT",year:"SE"});
+WriteResult({ "nInserted" : 1 })
+>
+> db.student.insert({rollno:6,name:"Mark",age:21,college:{name:"PICT",city:"Pune"},branch:"ENTC",year:"TE"});
+WriteResult({ "nInserted" : 1 })
+> db.student.insert({rollno:8,name:"Joe",age:21,college:{name:"COEP",city:"Pune"},branch:"Civil",year:"BE"});
+WriteResult({ "nInserted" : 1 })
+> db.student.insert({rollno:9,name:"Mike",age:21,college:{name:"COEP",city:"Pune"},branch:"Civil",year:"BE"});
+WriteResult({ "nInserted" : 1 })
+> db.student.insert({rollno:10,name:"Joe",age:21,college:{name:"COEP",city:"Pune"},branch:"Mechnical",year:"TE"});
+WriteResult({ "nInserted" : 1 })
+> db.student.insert({rollno:11,name:"Steve",age:19,college:{name:"COEP",city:"Pune"},branch:"Mechnical",year:"FE"});
+WriteResult({ "nInserted" : 1 })
+>
+> db.student.insert({rollno:12,name:"Ben",age:19,college:{name:"COEP",city:"Pune"},branch:"Mechnical",year:"FE"});
+WriteResult({ "nInserted" : 1 })
+> db.student.insert({rollno:13,name:"Henry",age:19,college:{name:"PICT",city:"Pune"},branch:"Mechnical",year:"FE"});
+WriteResult({ "nInserted" : 1 })
+> db.student.insert({rollno:14,name:"Prathamesh",age:19,college:{name:"PICT",city:"Pune"},branch:"ENTC",year:"FE"});
+WriteResult({ "nInserted" : 1 })
+> db.student.insert({rollno:15,name:"Ram",age:20,college:{name:"PICT",city:"Pune"},branch:"ENTC",year:"TE"});
+WriteResult({ "nInserted" : 1 })
+> db.student.find();
+{ "_id" : ObjectId("5f8ea879da82a25a952569b3"), "rollno" : 1, "name" : "Pradyumna", "age" : 20, "college" : { "name" : "PICT", "city" : "Pune" }, "branch" : "Computer", "year" : "TE" }
+{ "_id" : ObjectId("5f8eaad8da82a25a952569b4"), "rollno" : 2, "name" : "Shubham", "age" : 20, "college" : { "name" : "PICT", "city" : "Pune" }, "branch" : "Computer", "year" : "SE" }
+{ "_id" : ObjectId("5f8eaaeada82a25a952569b5"), "rollno" : 2, "name" : "Sangat", "age" : 20, "college" : { "name" : "PICT", "city" : "Pune" }, "branch" : "Computer", "year" : "TE" }
+{ "_id" : ObjectId("5f8eab3cda82a25a952569b6"), "rollno" : 3, "name" : "Vinayak", "age" : 20, "college" : { "name" : "VJTI", "city" : "Mumbai" }, "branch" : "IT", "year" : "TE" }
+{ "_id" : ObjectId("5f8eab76da82a25a952569b7"), "rollno" : 4, "name" : "Vinay", "age" : 20, "college" : { "name" : "VJTI", "city" : "Mumbai" }, "branch" : "IT", "year" : "TE" }
+{ "_id" : ObjectId("5f8ead2ada82a25a952569b8"), "rollno" : 5, "name" : "Vinay", "age" : 20, "college" : { "name" : "PICT", "city" : "Pune" }, "branch" : "IT", "year" : "SE" }
+{ "_id" : ObjectId("5f8ead37da82a25a952569b9"), "rollno" : 6, "name" : "Mark", "age" : 21, "college" : { "name" : "PICT", "city" : "Pune" }, "branch" : "ENTC", "year" : "TE" }
+{ "_id" : ObjectId("5f8ead43da82a25a952569ba"), "rollno" : 8, "name" : "Joe", "age" : 21, "college" : { "name" : "COEP", "city" : "Pune" }, "branch" : "Civil", "year" : "BE" }
+{ "_id" : ObjectId("5f8ead4fda82a25a952569bb"), "rollno" : 9, "name" : "Mike", "age" : 21, "college" : { "name" : "COEP", "city" : "Pune" }, "branch" : "Civil", "year" : "BE" }
+{ "_id" : ObjectId("5f8ead56da82a25a952569bc"), "rollno" : 10, "name" : "Joe", "age" : 21, "college" : { "name" : "COEP", "city" : "Pune" }, "branch" : "Mechnical", "year" : "TE" }
+{ "_id" : ObjectId("5f8ead5fda82a25a952569bd"), "rollno" : 11, "name" : "Steve", "age" : 19, "college" : { "name" : "COEP", "city" : "Pune" }, "branch" : "Mechnical", "year" : "FE" }
+{ "_id" : ObjectId("5f8ead65da82a25a952569be"), "rollno" : 12, "name" : "Ben", "age" : 19, "college" : { "name" : "COEP", "city" : "Pune" }, "branch" : "Mechnical", "year" : "FE" }
+{ "_id" : ObjectId("5f8ead73da82a25a952569bf"), "rollno" : 13, "name" : "Henry", "age" : 19, "college" : { "name" : "PICT", "city" : "Pune" }, "branch" : "Mechnical", "year" : "FE" }
+{ "_id" : ObjectId("5f8ead85da82a25a952569c0"), "rollno" : 14, "name" : "Prathamesh", "age" : 19, "college" : { "name" : "PICT", "city" : "Pune" }, "branch" : "ENTC", "year" : "FE" }
+{ "_id" : ObjectId("5f8ead8cda82a25a952569c1"), "rollno" : 15, "name" : "Ram", "age" : 20, "college" : { "name" : "PICT", "city" : "Pune" }, "branch" : "ENTC", "year" : "TE" }
+> db.student.find({rollno:2});
+{ "_id" : ObjectId("5f8eaad8da82a25a952569b4"), "rollno" : 2, "name" : "Shubham", "age" : 20, "college" : { "name" : "PICT", "city" : "Pune" }, "branch" : "Computer", "year" : "SE" }
+{ "_id" : ObjectId("5f8eaaeada82a25a952569b5"), "rollno" : 2, "name" : "Sangat", "age" : 20, "college" : { "name" : "PICT", "city" : "Pune" }, "branch" : "Computer", "year" : "TE" }
+
+db.student.find({"college.name":"PICT",year:"TE"});
+{ "_id" : ObjectId("5f8ea879da82a25a952569b3"), "rollno" : 1, "name" : "Pradyumna", "age" : 20, "college" : { "name" : "PICT", "city" : "Pune" }, "branch" : "Computer", "year" : "TE" }
+{ "_id" : ObjectId("5f8eaaeada82a25a952569b5"), "rollno" : 2, "name" : "Sangat", "age" : 20, "college" : { "name" : "PICT", "city" : "Pune" }, "branch" : "Computer", "year" : "TE" }
+{ "_id" : ObjectId("5f8ead37da82a25a952569b9"), "rollno" : 6, "name" : "Mark", "age" : 21, "college" : { "name" : "PICT", "city" : "Pune" }, "branch" : "ENTC", "year" : "TE" }
+{ "_id" : ObjectId("5f8ead8cda82a25a952569c1"), "rollno" : 15, "name" : "Ram", "age" : 20, "college" : { "name" : "PICT", "city" : "Pune" }, "branch" : "ENTC", "year" : "TE" }
+>
+
+
+> db.student.find({$or:[{name:"Pradyumna"},{branch:"IT"}]});
+{ "_id" : ObjectId("5f8ea879da82a25a952569b3"), "rollno" : 1, "name" : "Pradyumna", "age" : 20, "college" : { "name" : "PICT", "city" : "Pune" }, "branch" : "Computer", "year" : "TE" }
+{ "_id" : ObjectId("5f8eab3cda82a25a952569b6"), "rollno" : 3, "name" : "Vinayak", "age" : 20, "college" : { "name" : "VJTI", "city" : "Mumbai" }, "branch" : "IT", "year" : "TE" }
+{ "_id" : ObjectId("5f8eab76da82a25a952569b7"), "rollno" : 4, "name" : "Vinay", "age" : 20, "college" : { "name" : "VJTI", "city" : "Mumbai" }, "branch" : "IT", "year" : "TE" }
+{ "_id" : ObjectId("5f8ead2ada82a25a952569b8"), "rollno" : 5, "name" : "Vinay", "age" : 20, "college" : { "name" : "PICT", "city" : "Pune" }, "branch" : "IT", "year" : "SE" }
+>
+
+
+> db.student.find({$and:[{year:"SE"},{"college.city":"Pune"}]});
+{ "_id" : ObjectId("5f8eaad8da82a25a952569b4"), "rollno" : 2, "name" : "Shubham", "age" : 20, "college" : { "name" : "PICT", "city" : "Pune" }, "branch" : "Computer", "year" : "SE" }
+{ "_id" : ObjectId("5f8ead2ada82a25a952569b8"), "rollno" : 5, "name" : "Vinay", "age" : 20, "college" : { "name" : "PICT", "city" : "Pune" }, "branch" : "IT", "year" : "SE" }
+>
+
+
+
+> db.student.save({rollno:16,name:"Ramesh",age:25,college:{name:"PICT",city:"Pune"},branch:"ENTC",year:"BE"});
+WriteResult({ "nInserted" : 1 })
+> db.student.find({}).pretty();
+{
+        "_id" : ObjectId("5f8ea879da82a25a952569b3"),
+        "rollno" : 1,
+        "name" : "Pradyumna",
+        "age" : 20,
+        "college" : {
+                "name" : "PICT",
+                "city" : "Pune"
+        },
+        "branch" : "Computer",
+        "year" : "TE"
+}
+{
+        "_id" : ObjectId("5f8eaad8da82a25a952569b4"),
+        "rollno" : 2,
+        "name" : "Shubham",
+        "age" : 20,
+        "college" : {
+                "name" : "PICT",
+                "city" : "Pune"
+        },
+        "branch" : "Computer",
+        "year" : "SE"
+}
+{
+        "_id" : ObjectId("5f8eaaeada82a25a952569b5"),
+        "rollno" : 2,
+        "name" : "Sangat",
+        "age" : 20,
+        "college" : {
+                "name" : "PICT",
+                "city" : "Pune"
+        },
+        "branch" : "Computer",
+        "year" : "TE"
+}
+{
+        "_id" : ObjectId("5f8eab3cda82a25a952569b6"),
+        "rollno" : 3,
+        "name" : "Vinayak",
+        "age" : 20,
+        "college" : {
+                "name" : "VJTI",
+                "city" : "Mumbai"
+        },
+        "branch" : "IT",
+        "year" : "TE"
+}
+{
+        "_id" : ObjectId("5f8eab76da82a25a952569b7"),
+        "rollno" : 4,
+        "name" : "Vinay",
+        "age" : 20,
+        "college" : {
+                "name" : "VJTI",
+                "city" : "Mumbai"
+        },
+        "branch" : "IT",
+        "year" : "TE"
+}
+{
+        "_id" : ObjectId("5f8ead2ada82a25a952569b8"),
+        "rollno" : 5,
+        "name" : "Vinay",
+        "age" : 20,
+        "college" : {
+                "name" : "PICT",
+                "city" : "Pune"
+        },
+        "branch" : "IT",
+        "year" : "SE"
+}
+{
+        "_id" : ObjectId("5f8ead37da82a25a952569b9"),
+        "rollno" : 6,
+        "name" : "Mark",
+        "age" : 21,
+        "college" : {
+                "name" : "PICT",
+                "city" : "Pune"
+        },
+        "branch" : "ENTC",
+        "year" : "TE"
+}
+{
+        "_id" : ObjectId("5f8ead43da82a25a952569ba"),
+        "rollno" : 8,
+        "name" : "Joe",
+        "age" : 21,
+        "college" : {
+                "name" : "COEP",
+                "city" : "Pune"
+        },
+        "branch" : "Civil",
+        "year" : "BE"
+}
+{
+        "_id" : ObjectId("5f8ead4fda82a25a952569bb"),
+        "rollno" : 9,
+        "name" : "Mike",
+        "age" : 21,
+        "college" : {
+                "name" : "COEP",
+                "city" : "Pune"
+        },
+        "branch" : "Civil",
+        "year" : "BE"
+}
+{
+        "_id" : ObjectId("5f8ead56da82a25a952569bc"),
+        "rollno" : 10,
+        "name" : "Joe",
+        "age" : 21,
+        "college" : {
+                "name" : "COEP",
+                "city" : "Pune"
+        },
+        "branch" : "Mechnical",
+        "year" : "TE"
+}
+{
+        "_id" : ObjectId("5f8ead5fda82a25a952569bd"),
+        "rollno" : 11,
+        "name" : "Steve",
+        "age" : 19,
+        "college" : {
+                "name" : "COEP",
+                "city" : "Pune"
+        },
+        "branch" : "Mechnical",
+        "year" : "FE"
+}
+{
+        "_id" : ObjectId("5f8ead65da82a25a952569be"),
+        "rollno" : 12,
+        "name" : "Ben",
+        "age" : 19,
+        "college" : {
+                "name" : "COEP",
+                "city" : "Pune"
+        },
+        "branch" : "Mechnical",
+        "year" : "FE"
+}
+{
+        "_id" : ObjectId("5f8ead73da82a25a952569bf"),
+        "rollno" : 13,
+        "name" : "Henry",
+        "age" : 19,
+        "college" : {
+                "name" : "PICT",
+                "city" : "Pune"
+        },
+        "branch" : "Mechnical",
+        "year" : "FE"
+}
+{
+        "_id" : ObjectId("5f8ead85da82a25a952569c0"),
+        "rollno" : 14,
+        "name" : "Prathamesh",
+        "age" : 19,
+        "college" : {
+                "name" : "PICT",
+                "city" : "Pune"
+        },
+        "branch" : "ENTC",
+        "year" : "FE"
+}
+{
+        "_id" : ObjectId("5f8ead8cda82a25a952569c1"),
+        "rollno" : 15,
+        "name" : "Ram",
+        "age" : 20,
+        "college" : {
+                "name" : "PICT",
+                "city" : "Pune"
+        },
+        "branch" : "ENTC",
+        "year" : "TE"
+}
+{
+        "_id" : ObjectId("5f8eb299da82a25a952569c2"),
+        "rollno" : 16,
+        "name" : "Ramesh",
+        "age" : 25,
+        "college" : {
+                "name" : "PICT",
+                "city" : "Pune"
+        },
+        "branch" : "ENTC",
+        "year" : "BE"
+}
+>
+
+
+
+> db.student.find({year:"FE"});
+{ "_id" : ObjectId("5f8ead5fda82a25a952569bd"), "rollno" : 11, "name" : "Steve", "age" : 19, "college" : { "name" : "COEP", "city" : "Pune" }, "branch" : "Mechnical", "year" : "FE" }
+{ "_id" : ObjectId("5f8ead65da82a25a952569be"), "rollno" : 12, "name" : "Ben", "age" : 19, "college" : { "name" : "COEP", "city" : "Pune" }, "branch" : "Mechnical", "year" : "FE" }
+{ "_id" : ObjectId("5f8ead73da82a25a952569bf"), "rollno" : 13, "name" : "Henry", "age" : 19, "college" : { "name" : "PICT", "city" : "Pune" }, "branch" : "Mechnical", "year" : "FE" }
+{ "_id" : ObjectId("5f8ead85da82a25a952569c0"), "rollno" : 14, "name" : "Prathamesh", "age" : 19, "college" : { "name" : "PICT", "city" : "Pune" }, "branch" : "ENTC", "year" : "FE" }
+
+db.student.update({year:"FE"},{$set:{year:"SE"}});
+
+WriteResult({ "nMatched" : 1, "nUpserted" : 0, "nModified" : 1 })
+> db.student.find({year:"FE"});
+{ "_id" : ObjectId("5f8ead65da82a25a952569be"), "rollno" : 12, "name" : "Ben", "age" : 19, "college" : { "name" : "COEP", "city" : "Pune" }, "branch" : "Mechnical", "year" : "FE" }
+{ "_id" : ObjectId("5f8ead73da82a25a952569bf"), "rollno" : 13, "name" : "Henry", "age" : 19, "college" : { "name" : "PICT", "city" : "Pune" }, "branch" : "Mechnical", "year" : "FE" }
+{ "_id" : ObjectId("5f8ead85da82a25a952569c0"), "rollno" : 14, "name" : "Prathamesh", "age" : 19, "college" : { "name" : "PICT", "city" : "Pune" }, "branch" : "ENTC", "year" : "FE" }
+
+> db.student.updateMany({year:"FE"},{$set:{year:"SE"}});
+
+{ "acknowledged" : true, "matchedCount" : 3, "modifiedCount" : 3 }
+> db.student.find({year:"FE"});
+> db.student.find();
+{ "_id" : ObjectId("5f8ea879da82a25a952569b3"), "rollno" : 1, "name" : "Pradyumna", "age" : 20, "college" : { "name" : "PICT", "city" : "Pune" }, "branch" : "Computer", "year" : "TE" }
+{ "_id" : ObjectId("5f8eaad8da82a25a952569b4"), "rollno" : 2, "name" : "Shubham", "age" : 20, "college" : { "name" : "PICT", "city" : "Pune" }, "branch" : "Computer", "year" : "SE" }
+{ "_id" : ObjectId("5f8eaaeada82a25a952569b5"), "rollno" : 2, "name" : "Sangat", "age" : 20, "college" : { "name" : "PICT", "city" : "Pune" }, "branch" : "Computer", "year" : "TE" }
+{ "_id" : ObjectId("5f8eab3cda82a25a952569b6"), "rollno" : 3, "name" : "Vinayak", "age" : 20, "college" : { "name" : "VJTI", "city" : "Mumbai" }, "branch" : "IT", "year" : "TE" }
+{ "_id" : ObjectId("5f8eab76da82a25a952569b7"), "rollno" : 4, "name" : "Vinay", "age" : 20, "college" : { "name" : "VJTI", "city" : "Mumbai" }, "branch" : "IT", "year" : "TE" }
+{ "_id" : ObjectId("5f8ead2ada82a25a952569b8"), "rollno" : 5, "name" : "Vinay", "age" : 20, "college" : { "name" : "PICT", "city" : "Pune" }, "branch" : "IT", "year" : "SE" }
+{ "_id" : ObjectId("5f8ead37da82a25a952569b9"), "rollno" : 6, "name" : "Mark", "age" : 21, "college" : { "name" : "PICT", "city" : "Pune" }, "branch" : "ENTC", "year" : "TE" }
+{ "_id" : ObjectId("5f8ead43da82a25a952569ba"), "rollno" : 8, "name" : "Joe", "age" : 21, "college" : { "name" : "COEP", "city" : "Pune" }, "branch" : "Civil", "year" : "BE" }
+{ "_id" : ObjectId("5f8ead4fda82a25a952569bb"), "rollno" : 9, "name" : "Mike", "age" : 21, "college" : { "name" : "COEP", "city" : "Pune" }, "branch" : "Civil", "year" : "BE" }
+{ "_id" : ObjectId("5f8ead56da82a25a952569bc"), "rollno" : 10, "name" : "Joe", "age" : 21, "college" : { "name" : "COEP", "city" : "Pune" }, "branch" : "Mechnical", "year" : "TE" }
+{ "_id" : ObjectId("5f8ead5fda82a25a952569bd"), "rollno" : 11, "name" : "Steve", "age" : 19, "college" : { "name" : "COEP", "city" : "Pune" }, "branch" : "Mechnical", "year" : "SE" }
+{ "_id" : ObjectId("5f8ead65da82a25a952569be"), "rollno" : 12, "name" : "Ben", "age" : 19, "college" : { "name" : "COEP", "city" : "Pune" }, "branch" : "Mechnical", "year" : "SE" }
+{ "_id" : ObjectId("5f8ead73da82a25a952569bf"), "rollno" : 13, "name" : "Henry", "age" : 19, "college" : { "name" : "PICT", "city" : "Pune" }, "branch" : "Mechnical", "year" : "SE" }
+{ "_id" : ObjectId("5f8ead85da82a25a952569c0"), "rollno" : 14, "name" : "Prathamesh", "age" : 19, "college" : { "name" : "PICT", "city" : "Pune" }, "branch" : "ENTC", "year" : "SE" }
+{ "_id" : ObjectId("5f8ead8cda82a25a952569c1"), "rollno" : 15, "name" : "Ram", "age" : 20, "college" : { "name" : "PICT", "city" : "Pune" }, "branch" : "ENTC", "year" : "TE" }
+{ "_id" : ObjectId("5f8eb299da82a25a952569c2"), "rollno" : 16, "name" : "Ramesh", "age" : 25, "college" : { "name" : "PICT", "city" : "Pune" }, "branch" : "ENTC", "year" : "BE" }
+>
+
+
+> db.student.find().count();
+16
+> db.student.update({rollno:30},{$set:{rollno:31,name:"New Person",age:50,college:{name:"New College",city:"Pune"},branch:"Civil","year":"FE"}});
+WriteResult({ "nMatched" : 0, "nUpserted" : 0, "nModified" : 0 })
+> db.student.update({rollno:30},{$set:{rollno:31,name:"New Person",age:50,college:{name:"New College",city:"Pune"},branch:"Civil","year":"FE"}},{upsert:true});
+WriteResult({
+        "nMatched" : 0,
+        "nUpserted" : 1,
+        "nModified" : 0,
+        "_id" : ObjectId("5f8eb47e8e95dbdff4401a0f")
+})
+> db.student.find().count();
+17
+> db.student.find();
+{ "_id" : ObjectId("5f8ea879da82a25a952569b3"), "rollno" : 1, "name" : "Pradyumna", "age" : 20, "college" : { "name" : "PICT", "city" : "Pune" }, "branch" : "Computer", "year" : "TE" }
+{ "_id" : ObjectId("5f8eaad8da82a25a952569b4"), "rollno" : 2, "name" : "Shubham", "age" : 20, "college" : { "name" : "PICT", "city" : "Pune" }, "branch" : "Computer", "year" : "SE" }
+{ "_id" : ObjectId("5f8eaaeada82a25a952569b5"), "rollno" : 2, "name" : "Sangat", "age" : 20, "college" : { "name" : "PICT", "city" : "Pune" }, "branch" : "Computer", "year" : "TE" }
+{ "_id" : ObjectId("5f8eab3cda82a25a952569b6"), "rollno" : 3, "name" : "Vinayak", "age" : 20, "college" : { "name" : "VJTI", "city" : "Mumbai" }, "branch" : "IT", "year" : "TE" }
+{ "_id" : ObjectId("5f8eab76da82a25a952569b7"), "rollno" : 4, "name" : "Vinay", "age" : 20, "college" : { "name" : "VJTI", "city" : "Mumbai" }, "branch" : "IT", "year" : "TE" }
+{ "_id" : ObjectId("5f8ead2ada82a25a952569b8"), "rollno" : 5, "name" : "Vinay", "age" : 20, "college" : { "name" : "PICT", "city" : "Pune" }, "branch" : "IT", "year" : "SE" }
+{ "_id" : ObjectId("5f8ead37da82a25a952569b9"), "rollno" : 6, "name" : "Mark", "age" : 21, "college" : { "name" : "PICT", "city" : "Pune" }, "branch" : "ENTC", "year" : "TE" }
+{ "_id" : ObjectId("5f8ead43da82a25a952569ba"), "rollno" : 8, "name" : "Joe", "age" : 21, "college" : { "name" : "COEP", "city" : "Pune" }, "branch" : "Civil", "year" : "BE" }
+{ "_id" : ObjectId("5f8ead4fda82a25a952569bb"), "rollno" : 9, "name" : "Mike", "age" : 21, "college" : { "name" : "COEP", "city" : "Pune" }, "branch" : "Civil", "year" : "BE" }
+{ "_id" : ObjectId("5f8ead56da82a25a952569bc"), "rollno" : 10, "name" : "Joe", "age" : 21, "college" : { "name" : "COEP", "city" : "Pune" }, "branch" : "Mechnical", "year" : "TE" }
+{ "_id" : ObjectId("5f8ead5fda82a25a952569bd"), "rollno" : 11, "name" : "Steve", "age" : 19, "college" : { "name" : "COEP", "city" : "Pune" }, "branch" : "Mechnical", "year" : "SE" }
+{ "_id" : ObjectId("5f8ead65da82a25a952569be"), "rollno" : 12, "name" : "Ben", "age" : 19, "college" : { "name" : "COEP", "city" : "Pune" }, "branch" : "Mechnical", "year" : "SE" }
+{ "_id" : ObjectId("5f8ead73da82a25a952569bf"), "rollno" : 13, "name" : "Henry", "age" : 19, "college" : { "name" : "PICT", "city" : "Pune" }, "branch" : "Mechnical", "year" : "SE" }
+{ "_id" : ObjectId("5f8ead85da82a25a952569c0"), "rollno" : 14, "name" : "Prathamesh", "age" : 19, "college" : { "name" : "PICT", "city" : "Pune" }, "branch" : "ENTC", "year" : "SE" }
+{ "_id" : ObjectId("5f8ead8cda82a25a952569c1"), "rollno" : 15, "name" : "Ram", "age" : 20, "college" : { "name" : "PICT", "city" : "Pune" }, "branch" : "ENTC", "year" : "TE" }
+{ "_id" : ObjectId("5f8eb299da82a25a952569c2"), "rollno" : 16, "name" : "Ramesh", "age" : 25, "college" : { "name" : "PICT", "city" : "Pune" }, "branch" : "ENTC", "year" : "BE" }
+{ "_id" : ObjectId("5f8eb47e8e95dbdff4401a0f"), "rollno" : 31, "age" : 50, "branch" : "Civil", "college" : { "name" : "New College", "city" : "Pune" }, "name" : "New Person", "year" : "FE" }
+>
+
+
+
+> db.student.remove({rollno:31});
+WriteResult({ "nRemoved" : 1 })
+> db.student.find().count();
+16
+> db.student.remove({$or:[{"college.name":"VJTI"},{year:"BE"}]});
+WriteResult({ "nRemoved" : 5 })
+> db.student.find().count();
+11
+> db.student.find();
+{ "_id" : ObjectId("5f8ea879da82a25a952569b3"), "rollno" : 1, "name" : "Pradyumna", "age" : 20, "college" : { "name" : "PICT", "city" : "Pune" }, "branch" : "Computer", "year" : "TE" }
+{ "_id" : ObjectId("5f8eaad8da82a25a952569b4"), "rollno" : 2, "name" : "Shubham", "age" : 20, "college" : { "name" : "PICT", "city" : "Pune" }, "branch" : "Computer", "year" : "SE" }
+{ "_id" : ObjectId("5f8eaaeada82a25a952569b5"), "rollno" : 2, "name" : "Sangat", "age" : 20, "college" : { "name" : "PICT", "city" : "Pune" }, "branch" : "Computer", "year" : "TE" }
+{ "_id" : ObjectId("5f8ead2ada82a25a952569b8"), "rollno" : 5, "name" : "Vinay", "age" : 20, "college" : { "name" : "PICT", "city" : "Pune" }, "branch" : "IT", "year" : "SE" }
+{ "_id" : ObjectId("5f8ead37da82a25a952569b9"), "rollno" : 6, "name" : "Mark", "age" : 21, "college" : { "name" : "PICT", "city" : "Pune" }, "branch" : "ENTC", "year" : "TE" }
+{ "_id" : ObjectId("5f8ead56da82a25a952569bc"), "rollno" : 10, "name" : "Joe", "age" : 21, "college" : { "name" : "COEP", "city" : "Pune" }, "branch" : "Mechnical", "year" : "TE" }
+{ "_id" : ObjectId("5f8ead5fda82a25a952569bd"), "rollno" : 11, "name" : "Steve", "age" : 19, "college" : { "name" : "COEP", "city" : "Pune" }, "branch" : "Mechnical", "year" : "SE" }
+{ "_id" : ObjectId("5f8ead65da82a25a952569be"), "rollno" : 12, "name" : "Ben", "age" : 19, "college" : { "name" : "COEP", "city" : "Pune" }, "branch" : "Mechnical", "year" : "SE" }
+{ "_id" : ObjectId("5f8ead73da82a25a952569bf"), "rollno" : 13, "name" : "Henry", "age" : 19, "college" : { "name" : "PICT", "city" : "Pune" }, "branch" : "Mechnical", "year" : "SE" }
+{ "_id" : ObjectId("5f8ead85da82a25a952569c0"), "rollno" : 14, "name" : "Prathamesh", "age" : 19, "college" : { "name" : "PICT", "city" : "Pune" }, "branch" : "ENTC", "year" : "SE" }
+{ "_id" : ObjectId("5f8ead8cda82a25a952569c1"), "rollno" : 15, "name" : "Ram", "age" : 20, "college" : { "name" : "PICT", "city" : "Pune" }, "branch" : "ENTC", "year" : "TE" }
+>
+
+> db.student.remove({age:19,rollno:1});
+WriteResult({ "nRemoved" : 0 })
+>
+> db.student.remove({"college.name":"COEP"},1);
+WriteResult({ "nRemoved" : 1 })
+> db.student.find({"college.name":"COEP"});
+{ "_id" : ObjectId("5f8ead5fda82a25a952569bd"), "rollno" : 11, "name" : "Steve", "age" : 19, "college" : { "name" : "COEP", "city" : "Pune" }, "branch" : "Mechnical", "year" : "SE" }
+{ "_id" : ObjectId("5f8ead65da82a25a952569be"), "rollno" : 12, "name" : "Ben", "age" : 19, "college" : { "name" : "COEP", "city" : "Pune" }, "branch" : "Mechnical", "year" : "SE" }
+>
